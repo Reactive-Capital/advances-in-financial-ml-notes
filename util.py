@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 def getDailyVol(close, span0=100):
     # daily vol, reindexed to cloes
     df0 = close.index.searchsorted(close.index - pd.Timedelta(days=1))

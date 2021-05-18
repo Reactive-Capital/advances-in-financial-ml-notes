@@ -4,23 +4,26 @@ import numpy as np
 import time
 import sys
 
+
 def linParts(numAtoms,numThreads):
     # partition of atoms with a single loop
-    parts=np.linspace(0,numAtoms,min(numThreads,numAtoms)+1)
-    parts=np.ceil(parts).astype(int)
+    parts = np.linspace(0, numAtoms, min(numThreads, numAtoms)+1)
+    parts = np.ceil(parts).astype(int)
     return parts
+
 
 def nestedParts(numAtoms,numThreads,upperTriang=False):
     # partition of atoms with an inner loop
-    parts,numThreads_=[0],min(numThreads,numAtoms)
+    parts, numThreads_=[0], min(numThreads, numAtoms)
     for num in range(numThreads_):
-        part=1+4*(parts[-1]**2+parts[-1]+numAtoms*(numAtoms+1.)/numThreads_)
-        part=(-1+part**.5)/2.
+        part = 1+4*(parts[-1]**2+parts[-1] + numAtoms *(numAtoms+1.)/numThreads_)
+        part = (-1+part**.5)/2.
         parts.append(part)
-    parts=np.round(parts).astype(int)
-    if upperTriang: # the first rows are heaviest
-        parts=np.cumsum(np.diff(parts)[::-1])
-        parts=np.append(np.array([0]),parts)
+    parts = np.round(parts).astype(int)
+    if upperTriang:
+        # the first rows are heaviest
+        parts = np.cumsum(np.diff(parts)[::-1])
+        parts = np.append(np.array([0]),parts)
     return parts
 
 def mpPandasObj(func,pdObj,numThreads=24,mpBatches=1,linMols=True,**kargs):
